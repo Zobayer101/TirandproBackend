@@ -1,9 +1,8 @@
 const con = require("../database/database");
-
+const jwt = require("jsonwebtoken");
+const AgeCal = require("../middleware/webtoken");
 exports.Signup = async (req, res) => {
   const { email, pass, Igender, wgender, firstR, lastR } = req.body;
-
-  console.log(req.body);
 
   const InsertQuery = `INSERT INTO
   userData(Email,Pass,Gendar,wantGendar,ageRange,Varified,Primumuser,accountstatus)
@@ -14,13 +13,17 @@ exports.Signup = async (req, res) => {
     if (err) {
       res.status(500).json(err);
     } else if (result) {
-      console.log(result.insertId);
-      res.status(200).json({
+      let Token = jwt.sign(
+        { user_id: result.insertId, email, accountstatus: 0, premium: 0 },
+        process.env.secret
+      );
+      let info = {
         user_id: result.insertId,
         email,
         accountstatus: 0,
         premium: 0,
-      });
+      };
+      res.status(200).json({ info, Token });
     }
   });
 };
@@ -34,12 +37,15 @@ exports.LoginData = async (req, res) => {
     } else {
       if (result.length > 0) {
         if (result[0].Pass == pass) {
-          res.status(200).json({
+          let info = {
             user_id: result[0].user_id,
             email: result[0].Email,
             accountstatus: result[0].accountstatus,
             premium: result[0].Primumuser,
-          });
+          };
+          let Token = jwt.sign(info, process.env.secret);
+
+          res.status(200).json({ info, Token });
         } else {
           res.status(200).json({ errmsg: "wrong password !" });
         }
@@ -65,11 +71,51 @@ exports.LoginData = async (req, res) => {
 //   // });
 // };
 exports.MoreDataAdd = async (req, res) => {
-  console.log(req.body);
-  res.status(200).json("ok");
+  const { Name, DateOfBarth, Location } = req.body.aboutme;
+  const myage = AgeCal.calculateAge(DateOfBarth);
+
+  const { mypartner, aboutI } = req.body.partner;
+  const Itemdata = req.body.item;
+  let qu = `UPDATE userData SET 
+  Name=?,Age=?, DateOfBarth=?, Location=?,
+  Intarast=?, Bio=?, AboutPartner=?,accountstatus=? WHERE user_id=?`;
+  const values = [
+    Name,
+    myage,
+    DateOfBarth,
+    Location,
+    JSON.stringify(Itemdata),
+    aboutI,
+    mypartner,
+    true,
+    req.user_id,
+  ];
+  con.query(qu, values, (err) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      const Info = {
+        user_id: req.user_id,
+        email: req.email,
+        accountstatus: 1,
+        premium: 0,
+      };
+      res.status(200).json(Info);
+    }
+  });
 };
 
 //profile uploader;
 exports.ProfileUploader = async (req, res) => {
-  res.send("ok");
+  const fileName = req.file.filename;
+
+  const queary = `UPDATE userData SET Profile="${fileName}" WHERE user_id=${req.user_id}`;
+  con.query(queary, (err) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      res.status(200).json({ data: "ok" });
+    }
+  });
 };
+
