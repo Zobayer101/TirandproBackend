@@ -41,10 +41,21 @@ routes.post(
   controller.ProfileUploader
 );
 
+routes.post(
+  "/api/user/comewith/new",
+  TokenChack.VarifieadToken,
+  LogicalControll.FromGaccount
+);
+
 routes.get(
   "/api/user/infinitidata/retrive",
   TokenChack.VarifieadToken,
   LogicalControll.UserRitrive
 );
+routes.post("/api/auth/callback/google", (req, res) => {
+  console.log(req.body);
+  console.log("ok");
+  res.status(200).json("ok");
+});
 
 module.exports = routes;
