@@ -30,6 +30,7 @@ exports.Signup = async (req, res) => {
 
 exports.LoginData = async (req, res) => {
   const { email, pass } = req.body;
+  console.log(req.body);
   const getquery = `SELECT * FROM userData WHERE email="${email}"`;
   con.query(getquery, (err, result) => {
     if (err) {
@@ -118,4 +119,3 @@ exports.ProfileUploader = async (req, res) => {
     }
   });
 };
-
