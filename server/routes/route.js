@@ -47,15 +47,44 @@ routes.post(
   LogicalControll.FromGaccount
 );
 
+//News feed data
 routes.get(
   "/api/user/infinitidata/retrive",
   TokenChack.VarifieadToken,
   LogicalControll.UserRitrive
 );
+//for google 0Auth
 routes.post("/api/auth/callback/google", (req, res) => {
   console.log(req.body);
   console.log("ok");
   res.status(200).json("ok");
 });
+
+//myProfile data
+routes.get(
+  "/api/profile/data/user",
+  TokenChack.VarifieadToken,
+  controller.Myprofiledata
+);
+//Aboute me data update api
+routes.post(
+  "/api/update/userdata/aboutme",
+  TokenChack.VarifieadToken,
+  controller.UpdateAboutMe
+);
+
+//api Interast data update
+routes.post(
+  "/api/update/itemdata/user/myprofile",
+  TokenChack.VarifieadToken,
+  controller.MyprofileInterestDataUpdate
+);
+
+//api Iam Looking for data update now
+routes.post(
+  "/api/lookingfor/user/dataupdate",
+  TokenChack.VarifieadToken,
+  controller.LookingForDataUpdate
+);
 
 module.exports = routes;

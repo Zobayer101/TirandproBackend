@@ -4,7 +4,7 @@ exports.UserRitrive = async (req, res) => {
   let page = parseInt(req.query.page) || 2;
   let limit = parseInt(req.query.limit) || 10;
   let offset = (page - 1) * limit;
-  console.log(req.user_id);
+
   const queary = `SELECT * FROM userData ORDER BY RAND() LIMIT  ?,?`;
   con.query(queary, [offset, limit], (err, result) => {
     if (err) {
@@ -16,8 +16,6 @@ exports.UserRitrive = async (req, res) => {
 };
 
 exports.FromGaccount = async (req, res) => {
-  console.log("ok");
-
   let findquery = `SELECT *FROM userData WHERE email="${req.email}"`;
   con.query(findquery, (err, result) => {
     if (err) {

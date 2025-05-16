@@ -1,6 +1,7 @@
 const con = require("../database/database");
 const jwt = require("jsonwebtoken");
 const AgeCal = require("../middleware/webtoken");
+const { json } = require("express");
 exports.Signup = async (req, res) => {
   const { email, pass, Igender, wgender, firstR, lastR } = req.body;
 
@@ -30,7 +31,7 @@ exports.Signup = async (req, res) => {
 
 exports.LoginData = async (req, res) => {
   const { email, pass } = req.body;
-  console.log(req.body);
+
   const getquery = `SELECT * FROM userData WHERE email="${email}"`;
   con.query(getquery, (err, result) => {
     if (err) {
@@ -116,6 +117,70 @@ exports.ProfileUploader = async (req, res) => {
       res.status(500).json(err);
     } else {
       res.status(200).json({ data: "ok" });
+    }
+  });
+};
+
+//get myprofile data
+exports.Myprofiledata = async (req, res) => {
+  try {
+    let ID = req.user_id;
+    let qu = `SELECT *FROM userData WHERE user_id=${ID}`;
+    con.query(qu, (err, result) => {
+      if (err) {
+        res.status(500), json(err);
+      } else {
+        res.status(200).json(result[0]);
+      }
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+//About me from data update
+exports.UpdateAboutMe = async (req, res) => {
+  let id = req.user_id;
+  let data = JSON.stringify(req.body);
+
+  let qu = `UPDATE userData SET AboutMe =?  wHERE user_id=?`;
+  let value = [data, id];
+  con.query(qu, value, (err, result) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      res.status(200).json(result);
+    }
+  });
+};
+
+//Intarest myprofile data update
+exports.MyprofileInterestDataUpdate = async (req, res) => {
+  let id = req.user_id;
+  let data = JSON.stringify(req.body);
+  let qu = `UPDATE userData SET Intarast =?  wHERE user_id=?`;
+  let value = [data, id];
+  con.query(qu, value, (err, result) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      res.status(200).json(result);
+    }
+  });
+};
+
+exports.LookingForDataUpdate = async (req, res) => {
+  let id = req.user_id;
+
+  let data = req.body.mypertener;
+  let qu = "UPDATE userData SET  	AboutPartner=? WHERE user_id=?";
+  let value = [data, id];
+  con.query(qu, value, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json(err);
+    } else {
+      res.status(200).json(result);
     }
   });
 };

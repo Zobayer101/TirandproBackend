@@ -9,7 +9,8 @@ app.use(cors({ origin: "*" }));
 const port = process.env.port || 8800;
 
 app.use(express.json({ limit: "10mb" }));
-app.use("./public", express.static(path.resolve(__dirname, "./public/")));
+app.use("/public", express.static(path.resolve(__dirname, "public")));
+// app.use("/uploads", express.static("uploads"));
 app.use("/", route);
 app.listen(port, () => {
   console.log(`app run on http://localhost:${port}`);
