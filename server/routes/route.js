@@ -3,6 +3,10 @@ const con = require("../database/database");
 const controller = require("../controller/controller");
 const TokenChack = require("../middleware/webtoken");
 const upload = require("../middleware/Multer");
+const PrivateUpload = require("../middleware/PrivateUpload");
+const PublicUpload = require("../middleware/PublickPhotouploder");
+const VideoUpload = require("../middleware/VideoUpload");
+const Coverupload = require("../middleware/Coverupload");
 const LogicalControll = require("../controller/Logicalcontroll");
 const routes = express.Router();
 
@@ -87,4 +91,34 @@ routes.post(
   controller.LookingForDataUpdate
 );
 
+//api privatePhoto  photo update here
+routes.post(
+  "/api/photo/private/alluser/upload",
+  PrivateUpload.single("file"),
+  TokenChack.VarifieadToken,
+  controller.PrivatePhotoupload
+);
+
+//api publick photo upload
+routes.post(
+  "/api/photo/publickphoto/upload",
+  PublicUpload.single("file"),
+  TokenChack.VarifieadToken,
+  controller.PrivatePhotoupload
+);
+
+//api upload video
+routes.post(
+  "/api/video/upload/update",
+  VideoUpload.single("file"),
+  TokenChack.VarifieadToken,
+  controller.PrivatePhotoupload
+);
+//api upload CoverPhoto
+routes.post(
+  "/api/cover/photo/update/one",
+  Coverupload.single("file"),
+  TokenChack.VarifieadToken,
+  controller.CoverPhotoUpdate
+);
 module.exports = routes;

@@ -40,7 +40,8 @@ exports.TableCreates = (con) => {
       video VARCHAR(80),
       discription VARCHAR(80),
      user_id INT,
-      FOREIGN KEY (user_id) REFERENCES userData(user_id) ON DELETE CASCADE
+      FOREIGN KEY (user_id) REFERENCES userData(user_id) ON DELETE CASCADE,
+      create_at TIMESTAMP
 
 
       )`;
@@ -49,6 +50,42 @@ exports.TableCreates = (con) => {
           console.log(err);
         } else {
           console.log("photo table created");
+          let conquery = `CREATE TABLE IF NOT EXISTS conversation (
+          con_id INT AUTO_INCREMENT PRIMARY KEY,
+          CreatorID INT,
+          FOREIGN KEY (CreatorID) REFERENCES  userData(user_id) ON DELETE CASCADE,
+          PaticipatorID INT ,
+          FOREIGN KEY (PaticipatorID) REFERENCES  userData(user_id) ON DELETE CASCADE,
+          create_at TIMESTAMP
+          )`;
+          con.query(conquery, (err) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Conversation table are created!");
+              let conmsg = `CREATE TABLE IF NOT EXISTS Message(
+              msgID INT AUTO_INCREMENT PRIMARY KEY,
+              conversationID INT,
+          FOREIGN KEY (conversationID) REFERENCES  conversation(con_id) ON DELETE CASCADE,
+              SenderID INT,
+          FOREIGN KEY (SenderID) REFERENCES  userData(user_id) ON DELETE CASCADE,
+          ResiverID INT,
+          FOREIGN KEY (ResiverID) REFERENCES  userData(user_id) ON DELETE CASCADE,
+          Text VARCHAR(200),
+          photo VARCHAR(100),
+          video VARCHAR(100),
+          audio VARCHAR(100),
+          create_at TIMESTAMP
+              ) `;
+              con.query(conmsg, (err) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log("message table are create");
+                }
+              });
+            }
+          });
         }
       });
     }

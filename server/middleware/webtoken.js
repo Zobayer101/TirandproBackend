@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 exports.VarifieadToken = (req, res, next) => {
   try {
+    
     //console.log(req.headers.token);
     if (req.body?.Gaccount) {
       let decode = jwt.decode(req.headers.token);
@@ -11,7 +12,7 @@ exports.VarifieadToken = (req, res, next) => {
       return next();
     } else {
       let token = req.headers.token.split(`"`)[1];
-      
+
       let decode = jwt.verify(token, process.env.secret);
       req.user_id = decode?.user_id;
       req.email = decode?.email;

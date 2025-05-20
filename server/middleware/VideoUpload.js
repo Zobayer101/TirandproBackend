@@ -1,11 +1,9 @@
 const multer = require("multer");
-const path = require("path");
 
-const upPath = `./public/img/profile/`;
+const upPath = `./public/video/`;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    
     cb(null, upPath);
   },
   filename: (req, file, cb) => {
@@ -29,14 +27,10 @@ let upload = multer({
   },
 
   fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype == "image/jpg" ||
-      file.mimetype == "image/png" ||
-      file.mimetype == "image/jpeg"
-    ) {
-     
+    if (file.mimetype == "image/mp4") {
       cb(null, true);
     }
   },
 });
+
 module.exports = upload;

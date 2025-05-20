@@ -1,11 +1,11 @@
-const multer = require("multer");
-const path = require("path");
 
-const upPath = `./public/img/profile/`;
+
+const multer = require("multer");
+
+const upPath = `./public/img/public/`;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    
     cb(null, upPath);
   },
   filename: (req, file, cb) => {
@@ -34,9 +34,10 @@ let upload = multer({
       file.mimetype == "image/png" ||
       file.mimetype == "image/jpeg"
     ) {
-     
       cb(null, true);
     }
   },
 });
+
 module.exports = upload;
+
