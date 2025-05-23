@@ -65,7 +65,7 @@ routes.post("/api/auth/callback/google", (req, res) => {
 });
 
 //myProfile data
-routes.get(
+routes.post(
   "/api/profile/data/user",
   TokenChack.VarifieadToken,
   controller.Myprofiledata
@@ -99,12 +99,12 @@ routes.post(
   controller.PrivatePhotoupload
 );
 
-//api publick photo upload
+//api public photo upload
 routes.post(
-  "/api/photo/publickphoto/upload",
+  "/api/photo/publicphoto/upload",
   PublicUpload.single("file"),
   TokenChack.VarifieadToken,
-  controller.PrivatePhotoupload
+  controller.PublicPhotoUpload
 );
 
 //api upload video
@@ -114,6 +114,7 @@ routes.post(
   TokenChack.VarifieadToken,
   controller.PrivatePhotoupload
 );
+
 //api upload CoverPhoto
 routes.post(
   "/api/cover/photo/update/one",

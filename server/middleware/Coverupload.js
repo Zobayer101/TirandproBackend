@@ -1,6 +1,6 @@
 const multer = require("multer");
 const path = require("path");
-const upPath = `./public/img/private/`;
+const upPath = `./public/Coverphoto/`;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

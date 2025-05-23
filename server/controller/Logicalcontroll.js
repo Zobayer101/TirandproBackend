@@ -5,11 +5,23 @@ exports.UserRitrive = async (req, res) => {
   let limit = parseInt(req.query.limit) || 10;
   let offset = (page - 1) * limit;
 
-  const queary = `SELECT * FROM userData ORDER BY RAND() LIMIT  ?,?`;
+  const queary = `SELECT   u.user_id,
+    u.Name,
+    u.Age,
+    u.Profile,
+    u.Varified,
+    u.Online,
+    COUNT(m.media_id) AS media_count
+    
+    FROM userData u
+    LEFT JOIN multimedia m ON u.user_id = m.user_id
+    GROUP BY u.user_id
+     ORDER BY RAND() LIMIT  ?,?`;
   con.query(queary, [offset, limit], (err, result) => {
     if (err) {
       res.status(500).json(err);
     } else {
+      
       res.status(200).json(result);
     }
   });

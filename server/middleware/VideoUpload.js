@@ -1,5 +1,5 @@
 const multer = require("multer");
-
+const path = require("path");
 const upPath = `./public/video/`;
 
 const storage = multer.diskStorage({
